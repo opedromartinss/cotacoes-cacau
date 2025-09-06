@@ -1,0 +1,10 @@
+{
+  "ultima_atualizacao": null,
+  "data_formatada": null,
+  "hora_formatada": null,
+  "pregao_aberto": false,
+  "cacau": {
+    "bahia": { "preco": null },
+    "para": { "preco": null }
+  }
+}

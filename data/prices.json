@@ -1,10 +1,25 @@
 {
-  "ultima_atualizacao": null,
-  "data_formatada": null,
-  "hora_formatada": null,
+  "ultima_atualizacao": "2025-09-06T22:58:57.694057",
+  "data_formatada": "06/09/2025",
+  "hora_formatada": "22:58:57",
   "pregao_aberto": false,
+  "fonte": "raspagem_automatizada",
   "cacau": {
-    "bahia": { "preco": null },
-    "para": { "preco": null }
+    "bahia": {
+      "preco": 480.0,
+      "unidade": "arroba",
+      "peso_kg": 15,
+      "moeda": "BRL",
+      "preco_kg": 32.0,
+      "preco_saca": 1920.0
+    },
+    "para": {
+      "preco": 495.0,
+      "unidade": "arroba",
+      "peso_kg": 15,
+      "moeda": "BRL",
+      "preco_kg": 33.0,
+      "preco_saca": 1980.0
+    }
   }
 }

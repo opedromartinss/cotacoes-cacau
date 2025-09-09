@@ -3,6 +3,22 @@
     "produto": "cacau",
     "tipo": "para",
     "valor": 495.0,
+    "referente_a": "2025-09-09",
+    "coletado_em": "2025-09-09T02:23:07.176481",
+    "unidade": "arroba"
+  },
+  {
+    "produto": "cacau",
+    "tipo": "bahia",
+    "valor": 480.0,
+    "referente_a": "2025-09-09",
+    "coletado_em": "2025-09-09T02:23:07.176481",
+    "unidade": "arroba"
+  },
+  {
+    "produto": "cacau",
+    "tipo": "para",
+    "valor": 495.0,
     "referente_a": "2025-09-08",
     "coletado_em": "2025-09-08T21:13:52.041629",
     "unidade": "arroba"

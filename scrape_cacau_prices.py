@@ -76,6 +76,8 @@ def fetch_cacau_prices(url: str) -> Dict[str, float]:
         and unit (arroba, kg, saca).
     """
     # resp = requests.get(url, timeout=30)
+        #resp = requests.get(url, headers=HEADERS, timeout=30)
+
     
         resp = requests.get(url, headers=HEADERS, timeout=30)
     resp.raise_for_status()

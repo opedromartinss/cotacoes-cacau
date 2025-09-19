@@ -5,10 +5,17 @@ from pathlib import Path
 from typing import Dict, List
 
 import requests
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0",
+}
+
 from bs4 import BeautifulSoup
 
 
 def parse_price(text: str) -> float:
+   # HEADERS = {
+   # "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0",
+#}###
     """
     Convert a price string from the Notícias Agrícolas widget into a float.
 
@@ -68,7 +75,9 @@ def fetch_cacau_prices(url: str) -> Dict[str, float]:
         A dictionary with price data for Bahia and Pará keyed by region
         and unit (arroba, kg, saca).
     """
-    resp = requests.get(url, timeout=30)
+  # #   resp = requests.get(url, timeout=30)
+        resp = requests.get(url, headers=HEADERS, timeout=30)
+
     resp.raise_for_status()
     soup = BeautifulSoup(resp.text, "html.parser")
     rows = soup.find_all("tr")

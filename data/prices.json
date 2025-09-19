@@ -1,10 +1,12 @@
 {
   "data": "Bahia /@",
-  "bahia_arroba": 455.0,
-  "bahia_kg": 30.333333333333332,
-  "bahia_saca": 1820.0,
-  "para_arroba": -3.19,
-  "para_kg": -0.21266666666666667,
-  "para_saca": -12.76,
-  "ultima_atualizacao": "2025-09-19T17:13:14.474949"
+  "bahia_arroba": 425.0,
+  "bahia_kg": 28.333333333333332,
+  "bahia_saca": 1700.0,
+  "para_arroba": -6.59,
+  "para_kg": -0.4393333333333333,
+  "para_saca": -26.36,
+  "referente_a": "Bahia /@",
+  "coletado_em": "2025-09-19T21:00:24.210643",
+  "ultima_atualizacao": "2025-09-19T21:00:24.210643"
 }

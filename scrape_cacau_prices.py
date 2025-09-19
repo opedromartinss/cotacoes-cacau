@@ -75,9 +75,9 @@ def fetch_cacau_prices(url: str) -> Dict[str, float]:
         A dictionary with price data for Bahia and Pará keyed by region
         and unit (arroba, kg, saca).
     """
-  # #   resp = requests.get(url, timeout=30)
+    # resp = requests.get(url, timeout=30)
+    
         resp = requests.get(url, headers=HEADERS, timeout=30)
-
     resp.raise_for_status()
     soup = BeautifulSoup(resp.text, "html.parser")
     rows = soup.find_all("tr")

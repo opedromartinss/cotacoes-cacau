@@ -43,26 +43,65 @@ def fetch_cacau_prices() -> Dict[str, object]:
     }
 
 def update_prices_json(prices_path: Path, data: Dict[str, object], now: datetime) -> None:
+    """
+    Write the latest cacao prices to ``prices.json``.
+
+    The output includes both the date of the quotation (``referente_a``) and the
+    exact timestamp when the data was scraped (``coletado_em``).  The
+    conversion values (arroba, kg and saca) for Bahia and Pará are preserved
+    from the scraped data.  ``ultima_atualizacao`` is maintained for
+    backward‑compatibility.
+    """
     out = data.copy()
+    # Explicitly set the reference date and collection timestamp
+    out["referente_a"] = data["data"]
+    out["coletado_em"] = now.isoformat()
     out["ultima_atualizacao"] = now.isoformat()
     prices_path.write_text(json.dumps(out, ensure_ascii=False, indent=2))
 
 def update_history_json(history_path: Path, data: Dict[str, object], now: datetime) -> None:
+    """
+    Append the latest cacao prices to the historical JSON file.
+
+    Two records are created for each update: one for Bahia and one for Pará.
+    Each record mirrors the original structure with fields for reference date
+    (``referente_a``), collection timestamp (``coletado_em``), product name,
+    type (region), price value in arrobas, measurement unit and currency.  The
+    history retains only the 20 most recent records to avoid unlimited growth.
+    """
     history: List[dict] = []
     if history_path.exists():
-        history = json.loads(history_path.read_text())
-    entry = {
-        "data": data["data"],
-        "data_consulta": now.isoformat(),
-        "bahia_arroba": data["bahia_arroba"],
-        "bahia_kg": data["bahia_kg"],
-        "bahia_saca": data["bahia_saca"],
-        "para_arroba": data["para_arroba"],
-        "para_kg": data["para_kg"],
-        "para_saca": data["para_saca"],
+        try:
+            history = json.loads(history_path.read_text())
+        except json.JSONDecodeError:
+            history = []
+
+    base_timestamp = now.isoformat()
+    # Record for Bahia
+    bahia_entry = {
+        "referente_a": data["data"],
+        "coletado_em": base_timestamp,
+        "produto": "cacau",
+        "tipo": "bahia",
+        "valor": data["bahia_arroba"],
+        "unidade": "arroba",
+        "moeda": "BRL",
     }
-    history.append(entry)
-    history = history[-10:]
+    # Record for Pará
+    para_entry = {
+        "referente_a": data["data"],
+        "coletado_em": base_timestamp,
+        "produto": "cacau",
+        "tipo": "para",
+        "valor": data["para_arroba"],
+        "unidade": "arroba",
+        "moeda": "BRL",
+    }
+
+    history.append(bahia_entry)
+    history.append(para_entry)
+    # Keep only last 20 records
+    history = history[-20:]
     history_path.write_text(json.dumps(history, ensure_ascii=False, indent=2))
 
 def main() -> None:

@@ -4,6 +4,12 @@ Scraper for cacau prices (Bahia and Pará).
 """
 import json
 from datetime import datetime
+try:
+    # Python 3.9+: use zoneinfo for timezone awareness
+    from zoneinfo import ZoneInfo  # type: ignore
+except ImportError:
+    # Python <3.9 fallback: zoneinfo may not be available
+    ZoneInfo = None  # type: ignore
 from pathlib import Path
 from typing import Dict, List
 
@@ -19,10 +25,23 @@ HEADERS = {
 # For simplicity we assume the same trading hours as the coffee market:
 # Monday through Friday between 8:00 and 17:00 local time.
 def is_market_open() -> bool:
-    now = datetime.now()
+    """
+    Determine if the commodity market is currently open.
+
+    The market is considered open Monday through Friday between 8:00 and 17:00
+    local time (America/Sao_Paulo).  We convert the current UTC time to the
+    Sao Paulo timezone before checking.
+    """
+    # Use UTC now and then convert to Sao Paulo timezone if zoneinfo is available
+    utc_now = datetime.utcnow()
+    if ZoneInfo:
+        now = utc_now.replace(tzinfo=ZoneInfo("UTC")).astimezone(ZoneInfo("America/Sao_Paulo"))
+    else:
+        # Fallback: assume UTC approximates local time
+        now = utc_now
     weekday = now.weekday()  # 0=Monday, 6=Sunday
     hour = now.hour
-    # Market open Monday-Friday 8-17 inclusive
+    # Market open Monday‑Friday 8‑17 inclusive (local time)
     return 0 <= weekday <= 4 and 8 <= hour <= 17
 
 def fetch_cacau_prices() -> Dict[str, object]:
@@ -97,11 +116,23 @@ def update_prices_json(prices_path: Path, data: Dict[str, object], now: datetime
     a nested ``cacau`` object with standardized keys so that
     ``data-loader.js`` on precodocacau.com can parse them directly.
     """
-    # Meta information
+    # Determine current time in the Sao Paulo timezone for accurate timestamps.
+    # If ZoneInfo is available (Python 3.9+), convert the provided ``now``
+    # argument (which may be naive) to America/Sao_Paulo.  Otherwise,
+    # interpret ``now`` as UTC and adjust manually.
+    if ZoneInfo:
+        local_now = now.replace(tzinfo=ZoneInfo("UTC")).astimezone(ZoneInfo("America/Sao_Paulo"))
+    else:
+        # Fallback: treat the naive timestamp as local time
+        local_now = now
+    # Build the metadata for the price update.  Include an ISO timestamp with
+    # timezone offset, plus separate date/time strings for display.
     out: Dict[str, object] = {
-        "ultima_atualizacao": now.isoformat(),
-        "data_formatada": now.strftime("%d/%m/%Y"),
-        "hora_formatada": now.strftime("%H:%M:%S"),
+        "ultima_atualizacao": local_now.isoformat(),
+        "data_formatada": local_now.strftime("%d/%m/%Y"),
+        "hora_formatada": local_now.strftime("%H:%M:%S"),
+        # A single string combining date and time (dd/mm/YYYY HH:MM:SS)
+        "data_hora_formatada": local_now.strftime("%d/%m/%Y %H:%M:%S"),
         "pregao_aberto": is_market_open(),
         "fonte": "Notícias Agrícolas",
     }
@@ -141,7 +172,15 @@ def update_history_json(history_path: Path, data: Dict[str, object], now: dateti
         except json.JSONDecodeError:
             history = []
 
-    base_timestamp = now.isoformat()
+    # Convert the timestamp to Sao Paulo timezone for consistency with
+    # ``update_prices_json``.  When ``ZoneInfo`` is available (Python 3.9+),
+    # convert the naive ``now`` (assumed UTC) to local time; otherwise
+    # treat it as local time.
+    if ZoneInfo:
+        local_now = now.replace(tzinfo=ZoneInfo("UTC")).astimezone(ZoneInfo("America/Sao_Paulo"))
+    else:
+        local_now = now
+    base_timestamp = local_now.isoformat()
     # Record for Bahia
     bahia_entry = {
         "referente_a": data["data"],

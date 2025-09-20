@@ -15,6 +15,16 @@ HEADERS = {
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117 Safari/537.36"
 }
 
+# Determine if the commodity market is currently open.
+# For simplicity we assume the same trading hours as the coffee market:
+# Monday through Friday between 8:00 and 17:00 local time.
+def is_market_open() -> bool:
+    now = datetime.now()
+    weekday = now.weekday()  # 0=Monday, 6=Sunday
+    hour = now.hour
+    # Market open Monday-Friday 8-17 inclusive
+    return 0 <= weekday <= 4 and 8 <= hour <= 17
+
 def fetch_cacau_prices() -> Dict[str, object]:
     """Fetch prices for cacau from Notícias Agrícolas and return a dict with conversions."""
     url = "https://www.noticiasagricolas.com.br/widgets/cotacoes?id=96"
@@ -44,19 +54,40 @@ def fetch_cacau_prices() -> Dict[str, object]:
 
 def update_prices_json(prices_path: Path, data: Dict[str, object], now: datetime) -> None:
     """
-    Write the latest cacao prices to ``prices.json``.
+    Write the latest cacao prices to ``prices.json`` in the format expected
+    by the site.
 
-    The output includes both the date of the quotation (``referente_a``) and the
-    exact timestamp when the data was scraped (``coletado_em``).  The
-    conversion values (arroba, kg and saca) for Bahia and Pará are preserved
-    from the scraped data.  ``ultima_atualizacao`` is maintained for
-    backward‑compatibility.
+    The output JSON includes the ISO timestamp of the update as well as
+    localized date and time strings (``data_formatada`` and
+    ``hora_formatada``).  Prices for Bahia and Pará are provided under
+    a nested ``cacau`` object with standardized keys so that
+    ``data-loader.js`` on precodocacau.com can parse them directly.
     """
-    out = data.copy()
-    # Explicitly set the reference date and collection timestamp
-    out["referente_a"] = data["data"]
-    out["coletado_em"] = now.isoformat()
-    out["ultima_atualizacao"] = now.isoformat()
+    # Meta information
+    out: Dict[str, object] = {
+        "ultima_atualizacao": now.isoformat(),
+        "data_formatada": now.strftime("%d/%m/%Y"),
+        "hora_formatada": now.strftime("%H:%M:%S"),
+        "pregao_aberto": is_market_open(),
+        "fonte": "Notícias Agrícolas",
+    }
+    # Nested price objects (arroba is the base unit for cacau)
+    bahia_obj = {
+        "preco": data["bahia_arroba"],
+        "unidade": "arroba",
+        "peso_kg": 15,
+        "moeda": "BRL",
+    }
+    para_obj = {
+        "preco": data["para_arroba"],
+        "unidade": "arroba",
+        "peso_kg": 15,
+        "moeda": "BRL",
+    }
+    out["cacau"] = {
+        "bahia": bahia_obj,
+        "para": para_obj,
+    }
     prices_path.write_text(json.dumps(out, ensure_ascii=False, indent=2))
 
 def update_history_json(history_path: Path, data: Dict[str, object], now: datetime) -> None:

@@ -139,7 +139,7 @@ def main() -> None:
     root = Path(__file__).resolve().parent
     data_dir = root / "data"
     prices_path = data_dir / "prices.json"
-    history_path = data_dir / "historico.json"
+    history_path = data_dir / "precos.json"
     now = datetime.now()
     data = fetch_cacau_prices()
     update_prices_json(prices_path, data, now)

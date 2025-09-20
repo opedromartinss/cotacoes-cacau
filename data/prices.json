@@ -1,12 +1,21 @@
 {
-  "data": "Bahia /@",
-  "bahia_arroba": 425.0,
-  "bahia_kg": 28.333333333333332,
-  "bahia_saca": 1700.0,
-  "para_arroba": -6.59,
-  "para_kg": -0.4393333333333333,
-  "para_saca": -26.36,
-  "referente_a": "Bahia /@",
-  "coletado_em": "2025-09-19T21:13:22.714730",
-  "ultima_atualizacao": "2025-09-19T21:13:22.714730"
+  "ultima_atualizacao": "2025-09-20T00:47:48.577127",
+  "data_formatada": "20/09/2025",
+  "hora_formatada": "00:47:48",
+  "pregao_aberto": false,
+  "fonte": "Notícias Agrícolas",
+  "cacau": {
+    "bahia": {
+      "preco": 425.0,
+      "unidade": "arroba",
+      "peso_kg": 15,
+      "moeda": "BRL"
+    },
+    "para": {
+      "preco": -6.59,
+      "unidade": "arroba",
+      "peso_kg": 15,
+      "moeda": "BRL"
+    }
+  }
 }

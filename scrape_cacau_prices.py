@@ -32,16 +32,50 @@ def fetch_cacau_prices() -> Dict[str, object]:
     resp.raise_for_status()
     soup = BeautifulSoup(resp.text, "html.parser")
     tbody = soup.find("tbody")
-    row = tbody.find("tr")
-    cols = row.find_all("td")
-    date_str = cols[0].get_text(strip=True)
-    bahia_arroba = float(cols[1].get_text(strip=True).replace(".", "").replace(",", "."))
-    para_arroba = float(cols[2].get_text(strip=True).replace(".", "").replace(",", "."))
-    # 1 arroba = 15 kg; 1 saca = 60 kg
-    bahia_kg = bahia_arroba / 15
-    para_kg = para_arroba / 15
-    bahia_saca = bahia_kg * 60
-    para_saca = para_kg * 60
+    # Iterate over all rows to find Bahia and Pará prices
+    date_str = None
+    bahia_arroba = None
+    para_kg_price = None
+    # The table lists multiple rows. Each row contains: estado (with unit),
+    # price (R$), and variation (%). We'll match on the estado label.
+    for row in tbody.find_all("tr"):
+        cols = row.find_all("td")
+        if not cols or len(cols) < 3:
+            continue
+        # First column includes the state name and unit (e.g., "Bahia /@", "Pará / Kg")
+        estado_raw = cols[0].get_text(strip=True)
+        # Price string uses '.' for thousands and ',' for decimals
+        price_str = cols[1].get_text(strip=True).replace(".", "").replace(",", ".")
+        try:
+            price = float(price_str)
+        except ValueError:
+            continue
+        # Capture prices based on the state name
+        if "Bahia" in estado_raw:
+            # Bahia price is given per arroba (/@)
+            bahia_arroba = price
+        elif "Pará" in estado_raw or "Para" in estado_raw:
+            # Pará price is given per kg; capture kg price
+            para_kg_price = price
+    # Attempt to extract the reference date from the table footer (e.g., "Fech. 19/09/2025")
+    date_footer = soup.find("tfoot")
+    if date_footer:
+        footer_text = date_footer.get_text(strip=True)
+        import re
+        m = re.search(r"(\d{2}/\d{2}/\d{4})", footer_text)
+        if m:
+            date_str = m.group(1)
+    if date_str is None:
+        # Fallback to today's date formatted dd/mm/YYYY
+        date_str = datetime.now().strftime("%d/%m/%Y")
+    # Convert prices to desired units
+    # For Bahia: price per arroba -> compute kg and saca
+    bahia_kg = bahia_arroba / 15 if bahia_arroba is not None else None
+    bahia_saca = bahia_kg * 60 if bahia_kg is not None else None
+    # For Pará: price per kg -> convert to arroba and saca
+    para_kg = para_kg_price
+    para_arroba = para_kg * 15 if para_kg is not None else None
+    para_saca = para_kg * 60 if para_kg is not None else None
     return {
         "data": date_str,
         "bahia_arroba": bahia_arroba,

@@ -1,24 +1,6 @@
 [
   {
     "referente_a": "12/12/2025",
-    "coletado_em": "2025-12-14T06:17:12.516643-03:00",
-    "produto": "cacau",
-    "tipo": "bahia",
-    "valor": 418.0,
-    "unidade": "arroba",
-    "moeda": "BRL"
-  },
-  {
-    "referente_a": "12/12/2025",
-    "coletado_em": "2025-12-14T06:17:12.516643-03:00",
-    "produto": "cacau",
-    "tipo": "para",
-    "valor": 412.5,
-    "unidade": "arroba",
-    "moeda": "BRL"
-  },
-  {
-    "referente_a": "12/12/2025",
     "coletado_em": "2025-12-14T10:24:42.179909-03:00",
     "produto": "cacau",
     "tipo": "bahia",
@@ -176,6 +158,24 @@
     "produto": "cacau",
     "tipo": "para",
     "valor": 412.5,
+    "unidade": "arroba",
+    "moeda": "BRL"
+  },
+  {
+    "referente_a": "15/12/2025",
+    "coletado_em": "2025-12-15T23:50:41.644603-03:00",
+    "produto": "cacau",
+    "tipo": "bahia",
+    "valor": 405.0,
+    "unidade": "arroba",
+    "moeda": "BRL"
+  },
+  {
+    "referente_a": "15/12/2025",
+    "coletado_em": "2025-12-15T23:50:41.644603-03:00",
+    "produto": "cacau",
+    "tipo": "para",
+    "valor": 397.5,
     "unidade": "arroba",
     "moeda": "BRL"
   }

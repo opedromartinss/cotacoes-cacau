@@ -1,9 +1,9 @@
 {
-  "ultima_atualizacao": "2026-01-01T06:21:54.238873-03:00",
+  "ultima_atualizacao": "2026-01-01T10:30:57.074933-03:00",
   "data_formatada": "01/01/2026",
-  "hora_formatada": "06:21:54",
-  "data_hora_formatada": "01/01/2026 06:21:54",
-  "pregao_aberto": false,
+  "hora_formatada": "10:30:57",
+  "data_hora_formatada": "01/01/2026 10:30:57",
+  "pregao_aberto": true,
   "fonte": "Notícias Agrícolas",
   "cacau": {
     "bahia": {

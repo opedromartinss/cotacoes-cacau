@@ -1,19 +1,19 @@
 {
-  "ultima_atualizacao": "2026-04-20T18:42:20.769072-03:00",
-  "data_formatada": "20/04/2026",
-  "hora_formatada": "18:42:20",
-  "data_hora_formatada": "20/04/2026 18:42:20",
+  "ultima_atualizacao": "2026-04-21T01:09:58.035237-03:00",
+  "data_formatada": "21/04/2026",
+  "hora_formatada": "01:09:58",
+  "data_hora_formatada": "21/04/2026 01:09:58",
   "pregao_aberto": false,
   "fonte": "Notícias Agrícolas",
   "cacau": {
     "bahia": {
-      "preco": 193.0,
+      "preco": 190.0,
       "unidade": "arroba",
       "peso_kg": 15,
       "moeda": "BRL"
     },
     "para": {
-      "preco": 172.5,
+      "preco": 168.0,
       "unidade": "arroba",
       "peso_kg": 15,
       "moeda": "BRL"
